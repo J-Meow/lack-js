@@ -1,3 +1,8 @@
+export type SlackChannel = {
+    name: string
+    id: string
+}
+
 export class SlackClient {
     xoxc: string | undefined
     xoxd: string | undefined
@@ -5,6 +10,7 @@ export class SlackClient {
     userId: string | undefined
     fullName: string | undefined
     displayName: string | undefined
+    channels: SlackChannel[] = []
     constructor(options: {
         xoxc?: string | undefined
         xoxd?: string | undefined
@@ -59,5 +65,8 @@ export class SlackClient {
         this.userId = response.self.id
         this.displayName = response.self.profile.display_name
         this.fullName = response.self.profile.real_name
+        this.channels = response.channels.map(
+            (x: { name: string; id: string }) => ({ name: x.name, id: x.id }),
+        )
     }
 }
